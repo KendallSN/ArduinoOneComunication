@@ -40,10 +40,9 @@ void setup() {
     lcd.init();
     lcd.backlight();
     lcd.setCursor(0, 0);
-    lcd.setCursor(0, 0);
-    lcd.print("Mensaje:");
-    lcd.setCursor(0, 1);
     lcd.print(mensaje);
+    //lcd.setCursor(0, 1);
+    //lcd.print(mensaje);
 }
 
 void loop() {
@@ -52,19 +51,21 @@ void loop() {
 
   if (tecla) {
     if (tecla == '*') {
-      mensaje = ""; // Reinicia mensaje con '*'
+      mensaje = "HOLA"; // Reinicia mensaje con '*'
     } else {
       mensaje += tecla;
     }
     lcd.clear();
     lcd.setCursor(0, 0);
-    lcd.print("Mensaje enviado:");
-    lcd.setCursor(0, 1);
     lcd.print(mensaje);
   }
-
+    
   if (mensaje.length() > 0 && digitalRead(pinBoton) == LOW && !botonPresionado) {
     botonPresionado = true;
+    //Actualizar para limpiar antiguas respuestas
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print(mensaje);
 
     // === Capa de Aplicación ===
     byte longitud = mensaje.length();
@@ -86,7 +87,7 @@ void loop() {
     //Serial.println("Emisor: Mensaje enviado.");
 
     // === Leer respuesta ===
-    delay(100);
+    delay(0);
     byte buffer[256];
     int i = 0;
     while (Serial.available()) {
@@ -99,16 +100,24 @@ void loop() {
       byte crc_rx = buffer[3 + len];
       byte crc_calc = calcularCRC(buffer, 3 + len);
       if (crc_rx == crc_calc) {
-        Serial.print("Emisor: Respuesta del receptor: ");
+        //Serial.print("Emisor: Respuesta del receptor: ");
+        String respuesta="";
         for (int j = 0; j < len; j++) {
-          Serial.write(buffer[3 + j]);
+        //  Serial.write(buffer[3 + j]);
+        respuesta += (char)buffer[3 + j];
         }
-        Serial.println();
+        //Serial.println();
+        lcd.setCursor(0, 1);
+        lcd.print(i);
       } else {
-        Serial.println("Emisor: CRC de respuesta inválido.");
+        lcd.setCursor(0, 1);
+        lcd.print("CRC R invalido");
+        //Serial.println("Emisor: CRC de respuesta inválido.");
       }
     } else {
-      Serial.println("Emisor: No se recibió respuesta.");
+      lcd.setCursor(0, 1);
+      lcd.print(i);
+      //Serial.println("Emisor: No se recibió respuesta.");
     }
 
   } else if (digitalRead(pinBoton) == HIGH) {

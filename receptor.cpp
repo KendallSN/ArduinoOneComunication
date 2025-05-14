@@ -42,13 +42,12 @@ void loop() {
       char mensaje[17]; // LCD 16x2, máximo 16 caracteres por línea
       memcpy(mensaje, &buffer[3], min(16, longitud));
       mensaje[min(16, longitud)] = '\0';
-
+      //Se coloca en el lcd el mensaje recibido (Fila Superior)
       lcd.clear();
       lcd.setCursor(0, 0);
-      lcd.print("Mensaje Recibido:");
-      lcd.setCursor(0, 1);
       lcd.print(mensaje);
-
+      lcd.setCursor(0, 1);
+      lcd.print("CRC Correcto");
       // === Capa de APLICACIÓN ("App Datos") ===
       // Mostrar mensaje recibido
       //Serial.print("[App Datos] Mensaje recibido: ");
@@ -74,12 +73,14 @@ void loop() {
         Serial.write(trama_respuesta[m]);
       }
       
-      Serial.print("Respuesta a:" );
-      for (int k = 0; k < longitud; k++) {
-        Serial.write(buffer[3 + k]);
-      }
-      Serial.println();
+      //Serial.print("Respuesta a:" );
+      //for (int k = 0; k < longitud; k++) {
+      //  Serial.write(buffer[3 + k]);
+      //}
+      //Serial.println();
     } else {
+      lcd.setCursor(0, 1);
+      lcd.print("CRC incorrecto");
       //Serial.println("[ERROR] CRC incorrecto. Trama descartada.");
     }
   }
