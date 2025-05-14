@@ -64,7 +64,7 @@ void loop() {
       lcd.print("CRC Correcto");
     } else {
       lcd.setCursor(0, 1);
-      lcd.print("CRC incorrecto");
+      lcd.print("CRC Incorrecto");
     }
   }
 }

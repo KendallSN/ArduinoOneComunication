@@ -107,7 +107,7 @@ void loop() {
         lcd.print(respuesta);
       } else {
         lcd.setCursor(0, 1);
-        lcd.print("CRC R invalido");
+        lcd.print("CRC Incorrecto");
       }
     } else {
       lcd.setCursor(0, 1);
@@ -160,7 +160,7 @@ void sincronizarConReceptor() {
         }
         lcd.clear();
         lcd.setCursor(0, 1);
-        lcd.print("Ready");
+        lcd.print("Listo");
         ready = true;
       } else {
         lcd.setCursor(0, 1);
