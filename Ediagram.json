@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "author": "dian artanto",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "wokwi-arduino-uno", "id": "uno", "top": 0, "left": 0, "attrs": {} },
+    {
+      "type": "wokwi-serial-port",
+      "id": "serial",
+      "top": 0,
+      "left": 0,
+      "attrs": { "baud": "9600" }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn1",
+      "top": -80.2,
+      "left": 124.8,
+      "attrs": { "color": "green", "bounce": "0" }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led1",
+      "top": -70.8,
+      "left": 186.2,
+      "attrs": { "color": "red" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r1",
+      "top": -15.25,
+      "left": 124.8,
+      "attrs": { "value": "330" }
+    },
+    {
+      "type": "wokwi-lcd1602",
+      "id": "lcd1",
+      "top": -406.4,
+      "left": 178.4,
+      "attrs": { "pins": "i2c" }
+    },
+    {
+      "type": "wokwi-membrane-keypad",
+      "id": "keypad1",
+      "top": -184.4,
+      "left": 312.8,
+      "attrs": {}
+    }
+  ],
+  "connections": [
+    ["keypad1:R1", "uno:4", "green", []],
+    ["keypad1:R2", "uno:5", "green", []],
+    ["keypad1:R3", "uno:6", "green", []],
+    ["keypad1:R4", "uno:7", "green", []],
+    ["keypad1:C1", "uno:8", "green", []],
+    ["keypad1:C2", "uno:9", "green", []],
+    ["keypad1:C3", "uno:10", "green", []],
+    ["keypad1:C4", "uno:11", "green", []],
+    [ "lcd1:SDA", "uno:A4", "green", [ "v0" ] ],
+    [ "lcd1:SCL", "uno:A5", "green", [ "v0" ] ],
+    [ "lcd1:VCC", "uno:5V", "red", [ "v0" ] ],
+    [ "lcd1:GND", "uno:GND.1", "black", [ "v0" ] ],
+    [ "uno:1", "serial:RX", "", [] ],
+    [ "uno:0", "serial:TX", "", [] ],
+    [ "btn1:1.r", "uno:2", "green", [ "v0", "h48.2" ] ],
+    [ "led1:A", "uno:3", "green", [ "v0", "h19.2" ] ],
+    [ "led1:C", "r1:2", "green", [ "v0" ] ],
+    [ "uno:GND.1", "r1:1", "black", [ "v0" ] ],
+    [ "btn1:2.l", "uno:GND.1", "green", [ "h0" ] ]
+  ],
+  "dependencies": {}
+}
