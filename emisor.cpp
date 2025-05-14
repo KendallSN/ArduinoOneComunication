@@ -63,12 +63,13 @@ void loop() {
 
   if (mensaje.length() > 0 && digitalRead(pinBoton) == LOW && !botonPresionado) {
     botonPresionado = true;
+    // ===== Capa de Control(Aplicación) =====
     // ===== Actualizar para limpiar antiguas respuestas =====
     lcd.clear();
     lcd.setCursor(0, 0);
     lcd.print(mensaje);
 
-    // ===== Capa de Aplicación =====
+    // ===== Capa de datos (Enlace de datos) =====
     byte longitud = mensaje.length();
     byte trama[256];
     trama[0] = origen;
@@ -80,7 +81,8 @@ void loop() {
     byte crc = calcularCRC(trama, 3 + longitud);
     trama[3 + longitud] = crc;
 
-    // === Enviar trama (NRZ) ===
+    // ===== Capa de Medio (Fisica) =====
+    // ===== Enviar trama (NRZ) =====
     for (int i = 0; i < 4 + longitud; i++) {
       Serial.write(trama[i]);
     }
