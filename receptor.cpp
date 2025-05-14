@@ -1,21 +1,16 @@
+// ===== RECEPTOR =====
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 
-// Dirección 0x27 es común, pantalla de 16x2 caracteres
 LiquidCrystal_I2C lcd(0x27, 16, 2);
-
-
-// ===== RECEPTOR =====
 byte origen = 0x02;
 
 void setup() {
   Serial.begin(9600);
-
   lcd.init();
   lcd.backlight();
   lcd.setCursor(0, 0);
   lcd.print("Esperando msg...");
-
 }
 
 void loop() {
@@ -28,7 +23,7 @@ void loop() {
     while (Serial.available()) {
       buffer[i++] = Serial.read();
     }
-    // === Capa de ENLACE ("Trama Link") ===
+    // ===== Capa de ENLACE =====
     // Verificar CRC
     byte longitud = buffer[2];
     byte crc_calculado = 0;
@@ -38,23 +33,16 @@ void loop() {
     byte crc_recibido = buffer[3 + longitud];
     
     if (crc_calculado == crc_recibido) {
-
       char mensaje[17]; // LCD 16x2, máximo 16 caracteres por línea
       memcpy(mensaje, &buffer[3], min(16, longitud));
       mensaje[min(16, longitud)] = '\0';
-      //Se coloca en el lcd el mensaje recibido (Fila Superior)
+      // ===== Se coloca en el lcd el mensaje recibido (Fila Superior) =====
       lcd.clear();
       lcd.setCursor(0, 0);
       lcd.print(mensaje);
-      lcd.setCursor(0, 1);
-      lcd.print("CRC Correcto");
-      // === Capa de APLICACIÓN ("App Datos") ===
-      // Mostrar mensaje recibido
-      //Serial.print("[App Datos] Mensaje recibido: ");
-      
-      //Serial.println();
 
-      // Responder "OK" (mismo proceso que el transmisor)
+      // ===== Capa de Aplicación =====
+      // Responder "OK" al emisor
       String respuesta = "OK";
       byte trama_respuesta[256];
       trama_respuesta[0] = origen;
@@ -68,20 +56,15 @@ void loop() {
       byte crc_respuesta = calcularCRC(trama_respuesta, 3 + respuesta.length());
       trama_respuesta[3 + respuesta.length()] = crc_respuesta;
 
-      // Enviar respuesta
+      // ===== Enviar respuesta =====
       for (int m = 0; m < 4 + respuesta.length(); m++) {
         Serial.write(trama_respuesta[m]);
       }
-      
-      //Serial.print("Respuesta a:" );
-      //for (int k = 0; k < longitud; k++) {
-      //  Serial.write(buffer[3 + k]);
-      //}
-      //Serial.println();
+      lcd.setCursor(0, 1);
+      lcd.print("CRC Correcto");
     } else {
       lcd.setCursor(0, 1);
       lcd.print("CRC incorrecto");
-      //Serial.println("[ERROR] CRC incorrecto. Trama descartada.");
     }
   }
 }
